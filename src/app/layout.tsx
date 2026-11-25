@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Bricolage_Grotesque } from "next/font/google";
 import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
+import ReadAloud from "@/components/ReadAloud";
 import "./globals.css";
 import Toaster from "@/components/Toaster";
 
@@ -111,6 +112,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </footer>
         <Toaster />
+        <ReadAloud />
       </body>
     </html>
   );
