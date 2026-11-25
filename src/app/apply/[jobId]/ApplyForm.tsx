@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "@/components/Toaster";
 import Spinner from "@/components/Spinner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const input =
   "mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-100";
@@ -16,9 +17,16 @@ const PROMPTS = [
   "Skills you taught yourself",
 ];
 
-export default function ApplyForm({ job }: { job: { id: number; title: string; client: string } }) {
+export default function ApplyForm({
+  job,
+  user,
+}: {
+  job: { id: number; title: string; client: string };
+  user: { token: string; name: string; email: string } | null;
+}) {
   const router = useRouter();
-  const [form, setForm] = useState({ name: "", email: "", phone: "", location: "", cv_text: "" });
+  const [form, setForm] = useState({ name: user?.name ?? "", email: user?.email ?? "", phone: "", location: "", cv_text: "", password: "", password_confirmation: "" });
+  const [needsSignIn, setNeedsSignIn] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [cvFile, setCvFile] = useState<string | null>(null);
@@ -53,12 +61,26 @@ export default function ApplyForm({ job }: { job: { id: number; title: string; c
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ ...form, job_id: job.id }),
+        body: JSON.stringify({
+          ...form,
+          password: form.password || undefined,
+          password_confirmation: form.password ? form.password_confirmation : undefined,
+          session_token: user?.token,
+          job_id: job.id,
+        }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message ?? "We could not submit your application. Check the fields and try again.");
-      toast("Application submitted. Opening your private portal.");
+      if (res.status === 409 && data.needs_sign_in) setNeedsSignIn(true);
+      if (!res.ok) {
+        const first = data.errors ? (Object.values(data.errors)[0] as string[])[0] : null;
+        throw new Error(first ?? data.message ?? "We could not submit your application. Check the fields and try again.");
+      }
+      if (data.has_account && !user) {
+        await fetch("/api/session", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mode: "adopt", token: data.token }) });
+      }
+      toast(data.has_account ? "Application submitted. You are signed in to your account." : "Application submitted. Opening your private portal.");
       router.push(`/portal/${data.token}?welcome=1`);
+      router.refresh();
     } catch (err) {
       const message = err instanceof Error ? err.message : "We could not submit your application.";
       setError(message);
@@ -80,11 +102,11 @@ export default function ApplyForm({ job }: { job: { id: number; title: string; c
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="block text-sm font-semibold">
               Full name
-              <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={input} placeholder="e.g. Amina Nakato" />
+              <input required readOnly={Boolean(user)} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={input} placeholder="e.g. Amina Nakato" />
             </label>
             <label className="block text-sm font-semibold">
               Email
-              <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={input} placeholder="you@example.com" />
+              <input required readOnly={Boolean(user)} type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={input} placeholder="you@example.com" />
             </label>
             <label className="block text-sm font-semibold">
               Phone <span className="font-normal text-slate-400">(optional)</span>
@@ -132,7 +154,30 @@ export default function ApplyForm({ job }: { job: { id: number; title: string; c
             <span className="mt-1 block text-right text-xs font-normal text-slate-400">{form.cv_text.length} characters (50 minimum)</span>
           </label>
 
-          {error && <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{error}</p>}
+          {user ? (
+            <p className="rounded-2xl bg-brand-50 px-4 py-3 text-sm text-brand-700">
+              Applying as <strong>{user.email}</strong>. This goes into your existing Talent Profile.
+            </p>
+          ) : (
+            <div className="rounded-2xl border border-slate-200 p-4">
+              <p className="text-sm font-semibold">Create an account <span className="font-normal text-slate-400">(optional, recommended)</span></p>
+              <p className="mt-0.5 text-xs text-slate-500">
+                Choose a password to sign in later with your email. Skip it and we give you a private portal link instead.{" "}
+                <Link href={`/login?next=/apply/${job.id}`} className="font-bold text-brand-700 hover:underline">Already have an account? Sign in</Link>
+              </p>
+              <div className="mt-3 grid gap-4 sm:grid-cols-2">
+                <input type="password" minLength={8} autoComplete="new-password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className={input} placeholder="Password (8+ characters)" />
+                <input type="password" minLength={8} autoComplete="new-password" required={form.password.length > 0} value={form.password_confirmation} onChange={(e) => setForm({ ...form, password_confirmation: e.target.value })} className={input} placeholder="Confirm password" />
+              </div>
+            </div>
+          )}
+
+          {error && (
+            <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              {error}{" "}
+              {needsSignIn && <Link href={`/login?next=/apply/${job.id}`} className="font-bold underline">Sign in to apply</Link>}
+            </p>
+          )}
 
           <button
             disabled={busy}

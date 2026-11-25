@@ -49,7 +49,9 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
           <section className="rounded-3xl border border-slate-200 bg-white p-8">
             <h2 className="font-display text-xl font-bold">What this role needs</h2>
             <p className="mt-1 text-sm text-slate-500">
-              Our AI turned the job description into competencies. A recruiter approved them.
+              {req.engine?.startsWith("claude")
+                ? "Claude AI turned the job description into competencies. A recruiter confirms what is mandatory."
+                : "The job description was turned into competencies. A recruiter confirms what is mandatory."}
             </p>
             {req.required_skills?.length > 0 && (
               <div className="mt-6">
@@ -73,6 +75,26 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
                     </span>
                   ))}
                 </div>
+              </div>
+            )}
+            {((req.behavioural_expectations?.length ?? 0) > 0 || (req.practical_tasks?.length ?? 0) > 0) && (
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                {(req.behavioural_expectations?.length ?? 0) > 0 && (
+                  <div className="rounded-2xl border border-slate-200 p-4">
+                    <h3 className="text-sm font-bold">How you will work</h3>
+                    <ul className="mt-2 space-y-1.5 text-sm text-slate-600">
+                      {req.behavioural_expectations!.map((b) => <li key={b} className="flex gap-2"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-500" />{b}</li>)}
+                    </ul>
+                  </div>
+                )}
+                {(req.practical_tasks?.length ?? 0) > 0 && (
+                  <div className="rounded-2xl border border-slate-200 p-4">
+                    <h3 className="text-sm font-bold">What you would do in week one</h3>
+                    <ul className="mt-2 space-y-1.5 text-sm text-slate-600">
+                      {req.practical_tasks!.map((t) => <li key={t} className="flex gap-2"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />{t}</li>)}
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
             <div className="mt-6 grid gap-3 sm:grid-cols-2">

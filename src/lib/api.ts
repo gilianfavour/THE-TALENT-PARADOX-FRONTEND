@@ -37,6 +37,10 @@ export interface JobDetail extends JobSummary {
     preferred_skills: { name: string; importance: string }[];
     years_min: number | null;
     education_min: string | null;
+    behavioural_expectations?: string[];
+    practical_tasks?: string[];
+    mandatory_suggestions?: string[];
+    engine?: string;
   } | null;
 }
 
@@ -103,6 +107,7 @@ export interface TalentProfile {
   levels: Record<EvidenceLevel, string>;
   experiences: Experience[];
   experience_types: Record<string, string>;
+  ai?: { enabled: boolean; engine: string };
 }
 
 export interface MyApplication {
@@ -153,6 +158,7 @@ export interface TaskResult {
   final_score: number | null;
   criteria: TaskCriterionResult[];
   review_reason: string | null;
+  engine?: string;
   reviewer: string | null;
   review_note: string | null;
   submitted_at: string | null;
@@ -217,6 +223,8 @@ export const api = {
   task: (token: string, slug: string, job?: string) => get<PracticalTask>(`/portal/${token}/tasks/${slug}${job ? `?job=${job}` : ""}`),
   submitTask: (token: string, slug: string, payload: { response: string; link?: string; job_id?: number | null }) =>
     post<{ message: string; result: TaskResult }>(`/portal/${token}/tasks/${slug}`, payload),
+  setPassword: (token: string, payload: { current_password?: string; password: string; password_confirmation: string }) =>
+    post<{ message: string; token: string }>(`/portal/${token}/password`, payload),
   stats: () => get<{ open_vacancies: number; candidates: number; skills_proven: number; rediscovered: number }>("/stats"),
   help: (q: string) => get<{ answer: string }>(`/help?q=${encodeURIComponent(q)}`),
 };

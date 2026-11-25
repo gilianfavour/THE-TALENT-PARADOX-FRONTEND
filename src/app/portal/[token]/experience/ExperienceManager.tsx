@@ -95,7 +95,7 @@ export default function ExperienceManager({ token, initial }: { token: string; i
           {busy ? (
             <span className="inline-flex items-center justify-center gap-2">
               <Spinner />
-              Discovering skills...
+              {profile.ai?.enabled ? "Claude is reading your experience..." : "Discovering skills..."}
             </span>
           ) : (
             "Save and discover skills"
@@ -123,7 +123,9 @@ export default function ExperienceManager({ token, initial }: { token: string; i
             {e.description && <p className="mt-3 text-sm leading-relaxed text-slate-600">{e.description}</p>}
             {e.inferred_skills.length > 0 && (
               <div className="mt-4 rounded-2xl bg-paper p-4">
-                <p className="text-xs font-bold text-slate-500">Possible skills (AI-inferred, not yet verified)</p>
+                <p className="text-xs font-bold text-slate-500">
+                  Possible skills ({profile.ai?.enabled ? "found by Claude AI" : "inferred"}, not yet verified)
+                </p>
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {e.inferred_skills.map((s) => (
                     <span key={s} className="rounded-md bg-white px-2.5 py-1 text-xs font-semibold ring-1 ring-slate-200">{s}</span>

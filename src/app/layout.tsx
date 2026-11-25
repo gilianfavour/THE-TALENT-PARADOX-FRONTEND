@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Manrope, Bricolage_Grotesque } from "next/font/google";
 import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
+import SignOutButton from "@/components/SignOutButton";
+import { sessionToken } from "@/lib/session";
 import "./globals.css";
 import Toaster from "@/components/Toaster";
 
@@ -23,7 +25,7 @@ const NAV = [
 ] as const;
 
 const FOOTER: { title: string; links: [string, string][] }[] = [
-  { title: "Candidates", links: [["/vacancies", "Open vacancies"], ["/portal", "My portal"], ["/graduates", "Graduate pathway"], ["/how-it-works", "How it works"], ["/faq", "FAQ"], ["/help", "Help assistant"]] },
+  { title: "Candidates", links: [["/vacancies", "Open vacancies"], ["/register", "Create an account"], ["/login", "Sign in"], ["/portal", "My portal"], ["/graduates", "Graduate pathway"], ["/how-it-works", "How it works"], ["/faq", "FAQ"], ["/help", "Help assistant"]] },
   { title: "Platform", links: [["/platform", "Overview"], ["/platform/discover", "Discover"], ["/platform/verify", "Verify"], ["/platform/connect", "Connect"], ["/fairness", "Fairness"]] },
   { title: "Donswift", links: [["/about", "About"], ["/recruiters", "For recruiters"], ["/employers", "For employers"], ["/contact", "Contact"], ["/privacy", "Privacy"], ["/terms", "Terms"]] },
 ];
@@ -42,7 +44,8 @@ function Logo() {
   );
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const signedIn = Boolean(await sessionToken());
   return (
     <html lang="en" className={`h-full ${body.variable} ${display.variable}`}>
       <body className="flex min-h-full flex-col bg-paper text-ink antialiased">
@@ -58,9 +61,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   {label}
                 </Link>
               ))}
-              <Link href="/portal" className="ml-1 hidden rounded-lg border border-slate-300 bg-white px-4 py-2 text-ink transition hover:border-slate-400 sm:inline">
-                My portal
-              </Link>
+              {signedIn ? (
+                <>
+                  <Link href="/portal" className="ml-1 hidden rounded-lg border border-slate-300 bg-white px-4 py-2 text-ink transition hover:border-slate-400 sm:inline">
+                    My portal
+                  </Link>
+                  <SignOutButton className="hidden rounded-lg px-3 py-2 transition hover:bg-slate-100 hover:text-ink xl:inline" />
+                </>
+              ) : (
+                <Link href="/login" className="ml-1 hidden rounded-lg border border-slate-300 bg-white px-4 py-2 text-ink transition hover:border-slate-400 sm:inline">
+                  Sign in
+                </Link>
+              )}
               <Link href="/vacancies" className="tb-sheen ml-1 hidden rounded-lg bg-brand-600 px-4 py-2 text-white shadow-sm transition hover:bg-brand-700 sm:inline-block">
                 Find a role
               </Link>
@@ -72,12 +84,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   Menu
                 </summary>
                 <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
-                  {[...NAV, ["/graduates", "Graduates"], ["/employers", "Employers"], ["/faq", "FAQ"], ["/portal", "My portal"]].map(([href, label]) => (
+                  {[...NAV, ["/graduates", "Graduates"], ["/employers", "Employers"], ["/faq", "FAQ"], signedIn ? ["/portal", "My portal"] : ["/login", "Sign in"], ...(signedIn ? [] : [["/register", "Create account"]])].map(([href, label]) => (
                     <Link key={href} href={href} className="block rounded-xl px-4 py-2.5 hover:bg-slate-100 hover:text-ink">
                       {label}
                     </Link>
                   ))}
                   <Link href="/vacancies" className="mt-1 block rounded-xl bg-brand-600 px-4 py-2.5 text-center text-white">Find a role</Link>
+                  {signedIn && <SignOutButton className="mt-1 block w-full rounded-xl px-4 py-2.5 text-left hover:bg-slate-100 hover:text-ink" />}
                 </div>
               </details>
             </nav>
