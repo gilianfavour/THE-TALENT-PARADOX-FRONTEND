@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "@/components/Toaster";
 import { api, type NotificationItem } from "@/lib/api";
 
 const ICON: Record<string, string> = { rediscovery: "R", application: "A", assessment: "S", interview: "I" };
@@ -12,6 +13,7 @@ export default function Notifications({ token, initial }: { token: string; initi
   async function readAll() {
     await api.markRead(token).catch(() => null);
     setData((d) => ({ unread: 0, items: d.items.map((i) => ({ ...i, read_at: i.read_at ?? new Date().toISOString() })) }));
+    toast("All notifications marked as read.", "info");
   }
 
   return (

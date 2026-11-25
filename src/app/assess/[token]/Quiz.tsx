@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "@/components/Toaster";
+import Spinner from "@/components/Spinner";
 import { useRouter } from "next/navigation";
 
 interface Q {
@@ -36,8 +38,11 @@ export default function Quiz({ token, questions }: { token: string; questions: Q
       const data = await res.json();
       if (!res.ok) throw new Error(data.message ?? "Your answers were not saved. Try submitting again.");
       setDone({ score: data.overall_score });
+      toast("Skills check submitted. Your matches have been updated.");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Your answers were not saved. Try submitting again.");
+      const message = e instanceof Error ? e.message : "Your answers were not saved. Try submitting again.";
+      setError(message);
+      toast(message, "error");
     }
     setBusy(false);
   }
@@ -127,7 +132,14 @@ export default function Quiz({ token, questions }: { token: string; questions: Q
         disabled={busy || answered < questions.length}
         className="w-full rounded-xl bg-brand-600 py-4 text-sm font-bold text-white transition hover:bg-brand-700 disabled:opacity-50"
       >
-        {busy ? "Scoring your answers..." : `Submit answers (${answered} of ${questions.length})`}
+        {busy ? (
+          <span className="inline-flex items-center justify-center gap-2">
+            <Spinner />
+            Scoring your answers...
+          </span>
+        ) : (
+          `Submit answers (${answered} of ${questions.length})`
+        )}
       </button>
     </div>
   );

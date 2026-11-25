@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "@/components/Toaster";
+import Spinner from "@/components/Spinner";
 import { api, type TalentProfile } from "@/lib/api";
 
 const input = "mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100";
@@ -20,8 +22,11 @@ export default function SettingsForm({ token, initial }: { token: string; initia
       });
       setC(res.candidate);
       setSaved("Saved. Your profile is up to date.");
+      toast("Settings saved.");
     } catch (err) {
-      setSaved(err instanceof Error ? err.message : "Could not save.");
+      const message = err instanceof Error ? err.message : "Could not save.";
+      setSaved(message);
+      toast(message, "error");
     } finally {
       setBusy(false);
     }
@@ -71,7 +76,14 @@ export default function SettingsForm({ token, initial }: { token: string; initia
         </p>
         {saved && <p className="rounded-xl bg-brand-50 px-4 py-3 text-sm font-semibold text-brand-700">{saved}</p>}
         <button disabled={busy} className="w-full rounded-xl bg-brand-600 px-6 py-3.5 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-60">
-          {busy ? "Saving..." : "Save changes"}
+          {busy ? (
+            <span className="inline-flex items-center justify-center gap-2">
+              <Spinner />
+              Saving...
+            </span>
+          ) : (
+            "Save changes"
+          )}
         </button>
       </section>
     </form>

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "@/components/Toaster";
+import Spinner from "@/components/Spinner";
 
 const SUGGESTIONS = ["What is my application status?", "How does the skills check work?", "When is my interview?"];
 
@@ -18,6 +20,7 @@ export default function HelpBox() {
       setLog((l) => [...l, { q: question, a: data.answer }]);
     } catch {
       setLog((l) => [...l, { q: question, a: "The assistant is offline right now. Your portal still shows your latest status." }]);
+      toast("The assistant could not be reached. Check that the backend is running.", "error");
     }
     setQ("");
     setBusy(false);
@@ -44,6 +47,11 @@ export default function HelpBox() {
             <p className="mr-8 rounded-2xl rounded-bl-md bg-paper px-3.5 py-2.5 leading-relaxed text-slate-700">{m.a}</p>
           </div>
         ))}
+        {busy && (
+          <p className="mr-8 inline-flex items-center gap-2 rounded-2xl rounded-bl-md bg-paper px-3.5 py-2.5 text-sm text-slate-500">
+            <Spinner className="h-3.5 w-3.5" /> Checking...
+          </p>
+        )}
         {log.length === 0 && (
           <div className="flex flex-wrap gap-2">
             {SUGGESTIONS.map((s) => (
@@ -73,7 +81,7 @@ export default function HelpBox() {
           className="min-w-0 flex-1 rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
         />
         <button disabled={busy} className="rounded-xl bg-ink px-4 text-sm font-bold text-white transition hover:bg-brand-700 disabled:opacity-60">
-          Ask
+          {busy ? <Spinner /> : "Ask"}
         </button>
       </form>
     </section>

@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "@/components/Toaster";
+import Spinner from "@/components/Spinner";
 import { api, type Invitation } from "@/lib/api";
 
 export default function Invitations({ token, initial }: { token: string; initial: Invitation[] }) {
@@ -15,8 +17,11 @@ export default function Invitations({ token, initial }: { token: string; initial
       const res = await api.respond(token, id, decision);
       setItems((xs) => xs.map((x) => (x.id === id ? { ...x, status: res.status as Invitation["status"] } : x)));
       setNote(res.message);
+      toast(res.message, decision === "accept" ? "success" : "info");
     } catch (e) {
-      setNote(e instanceof Error ? e.message : "Something went wrong.");
+      const message = e instanceof Error ? e.message : "Your answer was not saved. Try again.";
+      setNote(message);
+      toast(message, "error");
     } finally {
       setBusy(null);
     }
@@ -61,7 +66,7 @@ export default function Invitations({ token, initial }: { token: string; initial
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {i.status === "invited" ? (
               <>
-                <button disabled={busy === i.id} onClick={() => respond(i.id, "accept")} className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-60">Yes, consider me</button>
+                <button disabled={busy === i.id} onClick={() => respond(i.id, "accept")} className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-60">{busy === i.id && <Spinner />}Yes, consider me</button>
                 <button disabled={busy === i.id} onClick={() => respond(i.id, "decline")} className="rounded-xl border border-slate-300 px-6 py-3 text-sm font-bold hover:border-slate-400 disabled:opacity-60">No, thanks</button>
               </>
             ) : (

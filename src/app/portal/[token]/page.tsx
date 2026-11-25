@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { api } from "@/lib/api";
 import HelpBox from "./HelpBox";
+import { FlashToast } from "@/components/Toaster";
 
 export const dynamic = "force-dynamic";
 
@@ -66,6 +67,7 @@ export default async function PortalPage({
 
   return (
     <div className="space-y-8">
+      {welcome && <FlashToast message="Application received. Welcome to your portal." />}
       {welcome && (
         <div className="rounded-2xl border border-brand-200 bg-brand-50 px-5 py-4 text-sm text-brand-700">
           <strong className="font-bold">Application received.</strong> This is your private portal. Bookmark it to track your

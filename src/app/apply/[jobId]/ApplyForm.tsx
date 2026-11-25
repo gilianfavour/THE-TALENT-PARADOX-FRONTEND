@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "@/components/Toaster";
+import Spinner from "@/components/Spinner";
 import { useRouter } from "next/navigation";
 
 const input =
@@ -32,9 +34,12 @@ export default function ApplyForm({ job }: { job: { id: number; title: string; c
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message ?? "We could not submit your application. Check the fields and try again.");
+      toast("Application submitted. Opening your private portal.");
       router.push(`/portal/${data.token}?welcome=1`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "We could not submit your application.");
+      const message = err instanceof Error ? err.message : "We could not submit your application.";
+      setError(message);
+      toast(message, "error");
       setBusy(false);
     }
   }
@@ -91,7 +96,14 @@ export default function ApplyForm({ job }: { job: { id: number; title: string; c
             disabled={busy}
             className="w-full rounded-xl bg-brand-600 py-3.5 text-sm font-bold text-white transition hover:bg-brand-700 disabled:opacity-60"
           >
-            {busy ? "Submitting your application..." : "Submit application"}
+            {busy ? (
+              <span className="inline-flex items-center justify-center gap-2">
+                <Spinner />
+                Submitting your application...
+              </span>
+            ) : (
+              "Submit application"
+            )}
           </button>
           <p className="text-center text-xs leading-relaxed text-slate-500">
             By applying you agree that Donswift recruiters can review your profile for this and other suitable roles. You can

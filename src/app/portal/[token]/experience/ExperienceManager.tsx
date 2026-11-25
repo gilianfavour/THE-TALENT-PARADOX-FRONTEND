@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "@/components/Toaster";
+import Spinner from "@/components/Spinner";
 import { api, type TalentProfile } from "@/lib/api";
 
 const PROMPTS = [
@@ -32,9 +34,12 @@ export default function ExperienceManager({ token, initial }: { token: string; i
       const res = await api.addExperience(token, payload);
       setProfile(res.profile);
       setMsg({ ok: true, text: res.message });
+      toast(res.message);
       setForm((f) => ({ ...f, title: "", organisation: "", description: "", evidence_url: "", started_on: "", ended_on: "" }));
     } catch (err) {
-      setMsg({ ok: false, text: err instanceof Error ? err.message : "Could not save. Try again." });
+      const message = err instanceof Error ? err.message : "Could not save. Try again.";
+      setMsg({ ok: false, text: message });
+      toast(message, "error");
     } finally {
       setBusy(false);
     }
@@ -43,6 +48,7 @@ export default function ExperienceManager({ token, initial }: { token: string; i
   async function remove(id: number) {
     await api.deleteExperience(token, id).catch(() => null);
     setProfile((p) => ({ ...p, experiences: p.experiences.filter((x) => x.id !== id) }));
+    toast("Experience removed.", "info");
   }
 
   return (
@@ -86,7 +92,14 @@ export default function ExperienceManager({ token, initial }: { token: string; i
         </label>
         {msg && <p className={`rounded-xl px-4 py-3 text-sm ${msg.ok ? "bg-brand-50 text-brand-700" : "bg-rose-50 text-rose-700"}`}>{msg.text}</p>}
         <button disabled={busy} className="w-full rounded-xl bg-brand-600 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-brand-700 disabled:opacity-60">
-          {busy ? "Discovering skills..." : "Save and discover skills"}
+          {busy ? (
+            <span className="inline-flex items-center justify-center gap-2">
+              <Spinner />
+              Discovering skills...
+            </span>
+          ) : (
+            "Save and discover skills"
+          )}
         </button>
       </form>
 

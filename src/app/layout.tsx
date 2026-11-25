@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Bricolage_Grotesque } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import Toaster from "@/components/Toaster";
 
 const body = Manrope({ subsets: ["latin"], variable: "--font-body" });
 const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-display-face" });
@@ -107,6 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <p className="mx-auto max-w-6xl px-5 py-5 text-xs text-slate-400">&copy; {new Date().getFullYear()} Donswift Company Ltd. AI discovers and supports. Humans make the decisions.</p>
           </div>
         </footer>
+        <Toaster />
       </body>
     </html>
   );
