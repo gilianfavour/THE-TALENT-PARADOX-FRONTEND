@@ -112,3 +112,49 @@ header[data-scrolled] { box-shadow: 0 8px 30px -18px rgba(10, 10, 10, 0.35); }
   .tb-page { animation: none; }
   [data-reveal] { opacity: 1; transform: none; }
 }
+
+/* Shimmer skeleton placeholders */
+@keyframes tb-shimmer { from { background-position: 150% 0; } to { background-position: -50% 0; } }
+.tb-shimmer {
+  background-color: #ececee;
+  background-image: linear-gradient(100deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0) 70%);
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: tb-shimmer 1.4s ease-in-out infinite;
+}
+.tb-shimmer:nth-child(2n) { animation-delay: 0.08s; }
+.tb-shimmer:nth-child(3n) { animation-delay: 0.16s; }
+
+/* Light sweep across important elements (buttons, badges, key cards) */
+@keyframes tb-sheen { 0% { transform: translateX(-130%) skewX(-20deg); } 55%, 100% { transform: translateX(260%) skewX(-20deg); } }
+.tb-sheen { position: relative; overflow: hidden; isolation: isolate; }
+.tb-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 45%;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+  transform: translateX(-130%) skewX(-20deg);
+  animation: tb-sheen 3.6s ease-in-out infinite;
+  animation-delay: var(--sheen-delay, 1.2s);
+  z-index: 1;
+}
+.tb-sheen-soft::after { background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0)); animation-duration: 5.5s; }
+
+/* Shimmering gradient text for key headings */
+@keyframes tb-text-shimmer { from { background-position: 200% 50%; } to { background-position: -200% 50%; } }
+.tb-text-shimmer {
+  background-image: linear-gradient(90deg, var(--color-ink) 0%, var(--color-ink) 35%, var(--color-brand-500) 50%, var(--color-ink) 65%, var(--color-ink) 100%);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: tb-text-shimmer 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tb-shimmer, .tb-sheen::after, .tb-text-shimmer { animation: none; }
+  .tb-sheen::after { display: none; }
+  .tb-text-shimmer { color: var(--color-ink); background: none; }
+}

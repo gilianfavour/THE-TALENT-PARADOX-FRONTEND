@@ -48,7 +48,7 @@ export default async function Home() {
       {/* Hero */}
       <section className="grid items-center gap-12 pt-4 lg:grid-cols-[1.1fr_1fr]">
         <div>
-          <span style={{ animationDelay: "0.05s" }} className="anim-fade-up inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+          <span style={{ animationDelay: "0.05s" }} className="anim-fade-up tb-sheen inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
             <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
             {jobs.length} open vacancies at Donswift
           </span>
@@ -62,7 +62,7 @@ export default async function Home() {
             short practical task, and matches you to every role you fit. Not just the one you applied for.
           </p>
           <div style={{ animationDelay: "0.45s" }} className="anim-fade-up mt-8 flex flex-wrap items-center gap-3">
-            <a href="#jobs" className="group inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3.5 text-sm font-bold text-white shadow-sm shadow-brand-600/30 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/30">
+            <a href="#jobs" className="tb-sheen group inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3.5 text-sm font-bold text-white shadow-sm shadow-brand-600/30 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/30">
               Browse open roles
               <span className="transition-transform duration-300 group-hover:translate-x-1" aria-hidden>&rarr;</span>
             </a>
@@ -89,7 +89,7 @@ export default async function Home() {
         {/* Talent profile visual */}
         <div className="anim-fade-up relative" style={{ animationDelay: "0.35s" }}>
           <div className="anim-glow absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-brand-100 via-white to-sun-50" />
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-25px_rgba(10,10,10,0.35)] transition duration-500 hover:-translate-y-1 hover:shadow-[0_30px_70px_-25px_rgba(200,16,46,0.35)]">
+          <div style={{ ["--sheen-delay" as string]: "2.4s" }} className="tb-sheen tb-sheen-soft rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-25px_rgba(10,10,10,0.35)] transition duration-500 hover:-translate-y-1 hover:shadow-[0_30px_70px_-25px_rgba(200,16,46,0.35)]">
             <div className="flex items-center gap-4">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-ink font-display text-xl font-bold text-white">AN</div>
               <div>
@@ -108,7 +108,7 @@ export default async function Home() {
                 </div>
               ))}
             </div>
-            <div className="mt-6 rounded-2xl border border-sun-200 bg-sun-50 p-4">
+            <div style={{ ["--sheen-delay" as string]: "3.4s" }} className="tb-sheen mt-6 rounded-2xl border border-sun-200 bg-sun-50 p-4">
               <p className="text-sm font-bold text-sun-700">Rediscovered for another role</p>
               <TypeOnce
                 delay={1900}
@@ -123,7 +123,7 @@ export default async function Home() {
       {/* How it works */}
       <section id="how" className="scroll-mt-24">
         <div className="max-w-2xl">
-          <h2 className="font-display text-4xl font-bold tracking-tight">Discover. Verify. Connect.</h2>
+          <h2 className="tb-text-shimmer font-display text-4xl font-bold tracking-tight">Discover. Verify. Connect.</h2>
           <p className="mt-3 text-base leading-relaxed text-slate-600">
             Three steps between you and a fair shot. No keyword filter decides your future.
           </p>
@@ -233,7 +233,7 @@ export default async function Home() {
       </section>
 
       {/* Promise */}
-      <section className="rounded-3xl bg-brand-700 px-8 py-12 text-white sm:px-12">
+      <section className="tb-sheen tb-sheen-soft rounded-3xl bg-brand-700 px-8 py-12 text-white sm:px-12">
         <div className="grid items-center gap-8 md:grid-cols-[1.4fr_1fr]">
           <div>
             <h2 className="font-display text-3xl font-bold leading-tight">A rejected application never means a rejected candidate.</h2>

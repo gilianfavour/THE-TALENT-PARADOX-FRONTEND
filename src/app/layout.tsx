@@ -61,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/portal" className="ml-1 hidden rounded-lg border border-slate-300 bg-white px-4 py-2 text-ink transition hover:border-slate-400 sm:inline">
                 My portal
               </Link>
-              <Link href="/vacancies" className="ml-1 hidden rounded-lg bg-brand-600 px-4 py-2 text-white shadow-sm transition hover:bg-brand-700 sm:inline">
+              <Link href="/vacancies" className="tb-sheen ml-1 hidden rounded-lg bg-brand-600 px-4 py-2 text-white shadow-sm transition hover:bg-brand-700 sm:inline-block">
                 Find a role
               </Link>
               <details className="group relative lg:hidden">

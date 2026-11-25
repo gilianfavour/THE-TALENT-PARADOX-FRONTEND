@@ -1,5 +1,5 @@
-import { PageLoader } from "@/components/Spinner";
+import { HomeSkeleton } from "@/components/Skeleton";
 
 export default function Loading() {
-  return <PageLoader label="Loading TalentBridge" />;
+  return <HomeSkeleton />;
 }

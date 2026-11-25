@@ -1,5 +1,5 @@
-import { PageLoader } from "@/components/Spinner";
+import { PortalSkeleton } from "@/components/Skeleton";
 
 export default function Loading() {
-  return <PageLoader label="Loading your portal" />;
+  return <PortalSkeleton />;
 }

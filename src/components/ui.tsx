@@ -18,7 +18,7 @@ export function Card({ children, className = "" }: { children: React.ReactNode; 
 
 export function Btn({ href, children, variant = "primary" }: { href: string; children: React.ReactNode; variant?: "primary" | "ghost" | "light" }) {
   const styles = {
-    primary: "bg-brand-600 text-white shadow-sm hover:bg-brand-700",
+    primary: "tb-sheen bg-brand-600 text-white shadow-sm hover:bg-brand-700",
     ghost: "border border-slate-300 bg-white text-ink hover:border-slate-400",
     light: "bg-white text-brand-700 hover:bg-brand-50",
   }[variant];
@@ -55,7 +55,7 @@ export function FeatureGrid({ items }: { items: { t: string; d: string }[] }) {
 
 export function CtaBand({ title, text, href, label }: { title: string; text: string; href: string; label: string }) {
   return (
-    <section className="flex flex-wrap items-center justify-between gap-6 rounded-3xl bg-ink p-8 text-white sm:p-10">
+    <section className="tb-sheen tb-sheen-soft flex flex-wrap items-center justify-between gap-6 rounded-3xl bg-ink p-8 text-white sm:p-10">
       <div className="max-w-2xl">
         <h2 className="font-display text-3xl font-bold">{title}</h2>
         <p className="mt-2 leading-relaxed text-zinc-300">{text}</p>
