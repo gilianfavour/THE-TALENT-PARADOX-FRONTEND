@@ -79,5 +79,5 @@ export const api = {
 };
 
 export function fmtMoney(amount: number) {
-  return "TZS " + amount.toLocaleString();
+  return "UGX " + amount.toLocaleString();
 }
