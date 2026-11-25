@@ -92,7 +92,7 @@ export default function Recruiters() {
         <ul className="space-y-3">
           {HUMAN.map((h) => (
             <li key={h} className="flex items-center gap-3 rounded-2xl bg-white/10 px-4 py-3 font-semibold">
-              <span className="h-2 w-2 rounded-full bg-sun-500" />
+              <span className="h-2 w-2 rounded-full bg-brand-500" />
               {h}
             </li>
           ))}

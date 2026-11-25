@@ -5,8 +5,8 @@ export const dynamic = "force-dynamic";
 
 const LADDER = [
   { label: "Self-reported", hint: "You say you can", tone: "bg-slate-300" },
-  { label: "AI-inferred", hint: "Found in your experience", tone: "bg-violet-400" },
-  { label: "Evidence-supported", hint: "A project or work sample", tone: "bg-sky-500" },
+  { label: "AI-inferred", hint: "Found in your experience", tone: "bg-zinc-400" },
+  { label: "Evidence-supported", hint: "A project or work sample", tone: "bg-zinc-700" },
   { label: "Assessed", hint: "Shown in a practical task", tone: "bg-brand-500" },
   { label: "Human-validated", hint: "Confirmed by a recruiter", tone: "bg-brand-700" },
 ];
@@ -79,9 +79,9 @@ export default async function Home() {
         {/* Talent profile visual */}
         <div className="relative">
           <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-brand-100 via-white to-sun-50" />
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-25px_rgba(16,35,31,0.35)]">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-25px_rgba(10,10,10,0.35)]">
             <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sun-500 font-display text-xl font-bold text-ink">AN</div>
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-ink font-display text-xl font-bold text-white">AN</div>
               <div>
                 <p className="font-display text-lg font-bold">Amina Nakato</p>
                 <p className="text-sm text-slate-500">Family shop, Kisenyi. No formal admin job title.</p>

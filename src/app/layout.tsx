@@ -18,7 +18,7 @@ function Logo() {
         <rect width="32" height="32" rx="9" className="fill-brand-600" />
         <path d="M6 21c3.5-7 16.5-7 20 0" stroke="white" strokeWidth="2.6" fill="none" strokeLinecap="round" />
         <path d="M10 21v-3.2M16 21v-5.5M22 21v-3.2" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
-        <circle cx="16" cy="9.5" r="2.4" className="fill-sun-500" />
+        <circle cx="16" cy="9.5" r="2.4" className="fill-white" />
       </svg>
       <span className="font-display text-lg font-bold tracking-tight text-ink">TalentBridge</span>
     </span>

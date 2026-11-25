@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 const STATUS: Record<string, { label: string; tone: string; step: number }> = {
   applied: { label: "Submitted", tone: "bg-slate-100 text-slate-700", step: 1 },
-  screening: { label: "Under review", tone: "bg-sky-50 text-sky-700", step: 2 },
+  screening: { label: "Under review", tone: "bg-zinc-100 text-zinc-800", step: 2 },
   shortlisted: { label: "Shortlisted", tone: "bg-brand-50 text-brand-700", step: 3 },
   interview: { label: "Interview", tone: "bg-sun-50 text-sun-700", step: 4 },
   offer: { label: "Offer", tone: "bg-brand-100 text-brand-700", step: 5 },
@@ -39,7 +39,7 @@ function ScoreRing({ score }: { score: number }) {
   return (
     <div className="relative h-14 w-14 shrink-0" title="Compatibility indicator, not a prediction of job success">
       <svg viewBox="0 0 44 44" className="h-14 w-14 -rotate-90">
-        <circle cx="22" cy="22" r={r} fill="none" stroke="#e5ebe9" strokeWidth="4" />
+        <circle cx="22" cy="22" r={r} fill="none" stroke="#e4e4e7" strokeWidth="4" />
         <circle
           cx="22" cy="22" r={r} fill="none" strokeWidth="4" strokeLinecap="round"
           className={score >= 70 ? "stroke-brand-500" : score >= 45 ? "stroke-sun-500" : "stroke-slate-300"}
@@ -76,7 +76,7 @@ export default async function PortalPage({
       {/* Header */}
       <header className="flex flex-wrap items-center justify-between gap-6 rounded-3xl border border-slate-200 bg-white p-8">
         <div className="flex items-center gap-5">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sun-500 font-display text-2xl font-bold">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-ink font-display text-2xl font-bold text-white">
             {first.slice(0, 1)}
           </div>
           <div>
@@ -138,7 +138,7 @@ export default async function PortalPage({
                     {a.signals.length > 0 && (
                       <div className="mt-4 flex flex-wrap gap-1.5">
                         {a.signals.map((s) => (
-                          <span key={s} className="rounded-md bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-700">
+                          <span key={s} className="rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-semibold text-zinc-800">
                             {SIGNAL_LABEL[s] ?? s.replaceAll("_", " ")}
                           </span>
                         ))}

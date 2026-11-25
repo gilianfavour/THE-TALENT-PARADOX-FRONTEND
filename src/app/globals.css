@@ -3,18 +3,18 @@
 @theme {
   --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-display-face), var(--font-body), ui-sans-serif, sans-serif;
-  --color-paper: #f6f8f7;
-  --color-ink: #10231f;
-  --color-brand-50: #ecf7f3;
-  --color-brand-100: #d3ede4;
-  --color-brand-200: #a6dbc9;
-  --color-brand-500: #13906f;
-  --color-brand-600: #0e7c66;
-  --color-brand-700: #0a5c4c;
-  --color-sun-50: #fff8e1;
-  --color-sun-200: #fde68a;
-  --color-sun-500: #f2b705;
-  --color-sun-700: #8a6400;
+  --color-paper: #fafafa;
+  --color-ink: #0a0a0a;
+  --color-brand-50: #fef2f2;
+  --color-brand-100: #fee2e2;
+  --color-brand-200: #fecaca;
+  --color-brand-500: #e11d2e;
+  --color-brand-600: #c8102e;
+  --color-brand-700: #8f0b1f;
+  --color-sun-50: #f4f4f5;
+  --color-sun-200: #d4d4d8;
+  --color-sun-500: #a1a1aa;
+  --color-sun-700: #0a0a0a;
 }
 
 html {

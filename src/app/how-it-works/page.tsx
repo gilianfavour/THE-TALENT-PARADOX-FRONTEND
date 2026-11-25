@@ -30,8 +30,8 @@ const STEPS = [
 
 const LADDER = [
   ["Self-reported", "You say you have the skill", "bg-slate-300"],
-  ["AI-inferred", "It appears in experience you described", "bg-violet-400"],
-  ["Evidence-supported", "You shared a project, document or work sample", "bg-sky-500"],
+  ["AI-inferred", "It appears in experience you described", "bg-zinc-400"],
+  ["Evidence-supported", "You shared a project, document or work sample", "bg-zinc-700"],
   ["Assessed", "You showed it in a practical task", "bg-brand-500"],
   ["Human-validated", "A recruiter reviewed and confirmed it", "bg-brand-700"],
 ];
