@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope, Bricolage_Grotesque } from "next/font/google";
 import Link from "next/link";
+import ScrollReveal from "@/components/ScrollReveal";
 import "./globals.css";
 import Toaster from "@/components/Toaster";
 
@@ -45,7 +46,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`h-full ${body.variable} ${display.variable}`}>
       <body className="flex min-h-full flex-col bg-paper text-ink antialiased">
-        <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur">
+        <ScrollReveal />
+        <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur transition-shadow duration-300">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
             <Link href="/" aria-label="TalentBridge home">
               <Logo />

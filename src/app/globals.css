@@ -62,3 +62,53 @@ body {
 /* Toasts */
 @keyframes tb-toast-in { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
 .tb-toast { animation: tb-toast-in 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
+/* Typing caret */
+@keyframes tb-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.tb-caret {
+  display: inline-block;
+  width: 0.08em;
+  height: 0.9em;
+  margin-left: 0.06em;
+  vertical-align: -0.06em;
+  border-radius: 2px;
+  background: currentColor;
+  animation: tb-blink 1s steps(1) infinite;
+}
+.tb-caret-sm { width: 2px; height: 1em; vertical-align: -0.15em; }
+
+/* Highlighted typed phrase */
+.tb-highlight {
+  color: var(--color-brand-600);
+  background-image: linear-gradient(transparent 82%, var(--color-brand-100) 82%);
+}
+
+/* Page transitions (template remounts on navigation). No fill after the end so sticky children keep working. */
+@keyframes tb-page-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.tb-page { animation: tb-page-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
+
+/* Scroll reveal */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(26px) scale(0.985);
+  transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: opacity, transform;
+}
+[data-reveal][data-revealed] { opacity: 1; transform: none; }
+
+/* Buttons and links feel pressable */
+main a[class*="rounded-xl"], main button { transition-duration: 200ms; }
+main a[class*="rounded-xl"]:active, main button:active { transform: scale(0.98); }
+
+/* Sticky header gains depth once the page scrolls (set by the header script) */
+header[data-scrolled] { box-shadow: 0 8px 30px -18px rgba(10, 10, 10, 0.35); }
+
+/* Soft glow behind the hero card */
+@keyframes tb-glow { 0%, 100% { opacity: 0.85; transform: scale(1); } 50% { opacity: 1; transform: scale(1.02); } }
+.anim-glow { animation: tb-glow 6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tb-caret { animation: none; }
+  .tb-page { animation: none; }
+  [data-reveal] { opacity: 1; transform: none; }
+}

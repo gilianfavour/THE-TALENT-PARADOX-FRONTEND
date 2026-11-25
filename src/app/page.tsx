@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { api, fmtMoney } from "@/lib/api";
 import BridgeIllustration from "@/components/BridgeIllustration";
+import CountUp from "@/components/CountUp";
+import { Typewriter, TypeOnce } from "@/components/Typewriter";
+
+const HERO_PHRASES = ["best CV.", "longest job history.", "top keyword match.", "fanciest job title.", "loudest in the room."];
 
 export const dynamic = "force-dynamic";
 
@@ -49,28 +53,31 @@ export default async function Home() {
             {jobs.length} open vacancies at Donswift
           </span>
           <h1 style={{ animationDelay: "0.15s" }} className="anim-fade-up mt-6 font-display text-5xl font-bold leading-[1.02] tracking-tight text-ink sm:text-6xl">
-            The best candidate is not always the best CV.
+            <span className="sr-only">The best candidate is not always the best CV.</span>
+            <span aria-hidden>The best candidate is not always the </span>
+            <Typewriter phrases={HERO_PHRASES} className="tb-highlight" />
           </h1>
           <p style={{ animationDelay: "0.3s" }} className="anim-fade-up mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
             TalentBridge reads your projects, family business, volunteering and self-taught skills, lets you prove them in a
             short practical task, and matches you to every role you fit. Not just the one you applied for.
           </p>
           <div style={{ animationDelay: "0.45s" }} className="anim-fade-up mt-8 flex flex-wrap items-center gap-3">
-            <a href="#jobs" className="rounded-xl bg-brand-600 px-6 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-brand-700">
+            <a href="#jobs" className="group inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3.5 text-sm font-bold text-white shadow-sm shadow-brand-600/30 transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/30">
               Browse open roles
+              <span className="transition-transform duration-300 group-hover:translate-x-1" aria-hidden>&rarr;</span>
             </a>
-            <a href="/how-it-works" className="rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-sm font-bold text-ink transition hover:border-slate-400">
+            <a href="/how-it-works" className="rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-sm font-bold text-ink transition hover:-translate-y-0.5 hover:border-slate-400 hover:shadow-md">
               See how it works
             </a>
           </div>
           <dl style={{ animationDelay: "0.6s" }} className="anim-fade-up mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-slate-200 pt-6">
             <div>
               <dt className="text-xs text-slate-500">Applications a week</dt>
-              <dd className="mt-1 font-display text-2xl font-bold">500+</dd>
+              <dd className="mt-1 font-display text-2xl font-bold"><CountUp to={500} suffix="+" /></dd>
             </div>
             <div>
               <dt className="text-xs text-slate-500">Phone calls a day</dt>
-              <dd className="mt-1 font-display text-2xl font-bold">45</dd>
+              <dd className="mt-1 font-display text-2xl font-bold"><CountUp to={45} /></dd>
             </div>
             <div>
               <dt className="text-xs text-slate-500">Decisions made by AI</dt>
@@ -81,8 +88,8 @@ export default async function Home() {
 
         {/* Talent profile visual */}
         <div className="anim-fade-up relative" style={{ animationDelay: "0.35s" }}>
-          <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-brand-100 via-white to-sun-50" />
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-25px_rgba(10,10,10,0.35)]">
+          <div className="anim-glow absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-brand-100 via-white to-sun-50" />
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-25px_rgba(10,10,10,0.35)] transition duration-500 hover:-translate-y-1 hover:shadow-[0_30px_70px_-25px_rgba(200,16,46,0.35)]">
             <div className="flex items-center gap-4">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-ink font-display text-xl font-bold text-white">AN</div>
               <div>
@@ -91,8 +98,8 @@ export default async function Home() {
               </div>
             </div>
             <div className="mt-6 space-y-4">
-              {PROFILE_SKILLS.map((s) => (
-                <div key={s.name} className="flex items-center justify-between gap-4">
+              {PROFILE_SKILLS.map((s, i) => (
+                <div key={s.name} style={{ animationDelay: `${0.55 + i * 0.12}s` }} className="anim-fade-up flex items-center justify-between gap-4">
                   <div className="min-w-0">
                     <p className="text-sm font-semibold">{s.name}</p>
                     <p className="truncate text-xs text-slate-500">{s.source}</p>
@@ -103,10 +110,11 @@ export default async function Home() {
             </div>
             <div className="mt-6 rounded-2xl border border-sun-200 bg-sun-50 p-4">
               <p className="text-sm font-bold text-sun-700">Rediscovered for another role</p>
-              <p className="mt-1 text-sm leading-relaxed text-slate-700">
-                Not a strong fit for Administrative Assistant, but a 78 match for Project Support Officer. A recruiter is
-                reviewing the recommendation.
-              </p>
+              <TypeOnce
+                delay={1900}
+                className="mt-1 text-sm leading-relaxed text-slate-700"
+                text="Not a strong fit for Administrative Assistant, but a 78 match for Project Support Officer. A recruiter is reviewing the recommendation."
+              />
             </div>
           </div>
         </div>
