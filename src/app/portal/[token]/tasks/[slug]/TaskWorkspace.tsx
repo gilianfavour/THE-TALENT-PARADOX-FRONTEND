@@ -76,6 +76,10 @@ export default function TaskWorkspace({ token, task }: { token: string; task: Pr
                 <h2 className="mt-3 font-display text-xl font-bold">
                   {result.status === "validated" ? "Your validated result" : "Your preliminary result"}
                 </h2>
+                <p className="mt-1 text-xs text-slate-500">
+                  {result.engine?.startsWith("claude") ? "Marked against the rubric by Claude AI" : "Marked with the rubric check"}
+                  {result.status === "validated" ? ", then confirmed by a recruiter." : ". A recruiter makes the final call."}
+                </p>
               </div>
               <div className="text-right">
                 <p className="font-display text-5xl font-bold text-brand-700">{result.status === "validated" ? result.final_score : Math.round(result.preliminary_score)}</p>
