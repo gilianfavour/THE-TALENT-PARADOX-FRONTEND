@@ -73,6 +73,13 @@ export default async function PortalPage({
         </div>
       )}
 
+      {(data.open_invitations ?? 0) > 0 && (
+        <Link href={`/portal/${token}/opportunities`} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-ink px-6 py-4 text-white transition hover:bg-zinc-800">
+          <span><strong className="font-bold">A recruiter invited you to another role.</strong> <span className="text-zinc-300">Review it and accept or decline.</span></span>
+          <span className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-bold">View invitation</span>
+        </Link>
+      )}
+
       {/* Header */}
       <header className="flex flex-wrap items-center justify-between gap-6 rounded-3xl border border-slate-200 bg-white p-8">
         <div className="flex items-center gap-5">
@@ -84,9 +91,14 @@ export default async function PortalPage({
             <p className="mt-1 text-sm text-slate-500">{data.candidate.headline ?? data.candidate.email}</p>
           </div>
         </div>
-        <Link href={`/assess/${token}`} className="rounded-xl bg-brand-600 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-brand-700">
-          Take the skills check
-        </Link>
+        <div className="flex flex-wrap gap-3">
+          <Link href={`/portal/${token}/notifications`} className="rounded-xl border border-slate-300 px-5 py-3.5 text-sm font-bold transition hover:border-slate-400">
+            Notifications{(data.unread_notifications ?? 0) > 0 && <span className="ml-2 rounded-full bg-brand-600 px-2 py-0.5 text-xs text-white">{data.unread_notifications}</span>}
+          </Link>
+          <Link href={`/assess/${token}`} className="rounded-xl bg-brand-600 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-brand-700">
+            Take the skills check
+          </Link>
+        </div>
       </header>
 
       {/* Stats */}

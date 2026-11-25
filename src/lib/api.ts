@@ -6,9 +6,9 @@ async function get<T>(path: string): Promise<T> {
   return res.json();
 }
 
-async function post<T>(path: string, body: unknown): Promise<T> {
+async function post<T>(path: string, body: unknown, method = "POST"): Promise<T> {
   const res = await fetch(`${API}${path}`, {
-    method: "POST",
+    method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
@@ -56,6 +56,96 @@ export interface PortalData {
     better_fit: { title: string; score: number; client: string } | null;
   }[];
   suggested_jobs: { job_id: number; title: string; client: string; score: number; signals: string[]; top_reasons: string[] }[];
+  unread_notifications?: number;
+  open_invitations?: number;
+}
+
+export type EvidenceLevel = "self_reported" | "ai_inferred" | "evidence_supported" | "assessed" | "human_validated";
+
+export interface TalentSkill {
+  id: number;
+  name: string;
+  category: string | null;
+  level: EvidenceLevel;
+  level_label: string;
+  years: number | null;
+  score: number | null;
+  source: string | null;
+}
+
+export interface Experience {
+  id: number;
+  type: string;
+  type_label: string;
+  title: string;
+  organisation: string | null;
+  description: string | null;
+  evidence_url: string | null;
+  started_on: string | null;
+  ended_on: string | null;
+  inferred_skills: string[];
+}
+
+export interface TalentProfile {
+  candidate: {
+    name: string;
+    email: string;
+    phone: string | null;
+    location: string | null;
+    headline: string | null;
+    career_interests: string | null;
+    talent_pool_visible: boolean;
+    consent_rediscovery: boolean;
+    flags: Record<string, unknown>;
+  };
+  completion: number;
+  skills: TalentSkill[];
+  levels: Record<EvidenceLevel, string>;
+  experiences: Experience[];
+  experience_types: Record<string, string>;
+}
+
+export interface MyApplication {
+  id: number;
+  job_id: number;
+  job: string;
+  client: string;
+  status: string;
+  status_label: string;
+  score: number | null;
+  explanations: string[];
+  signals: string[];
+  breakdown: { skills: number; experience: number; education: number; potential: number; max: number } | null;
+  applied_at: string | null;
+  updated_at: string | null;
+}
+
+export interface Invitation {
+  id: number;
+  job_id: number;
+  title: string;
+  client: string;
+  location: string | null;
+  deadline: string | null;
+  score: number;
+  reasons: string[];
+  gaps: string[];
+  status: "invited" | "accepted" | "declined";
+}
+
+export interface Opportunities {
+  invitations: Invitation[];
+  suggested: { job_id: number; title: string; client: string; deadline: string | null; score: number; signals: string[]; top_reasons: string[] }[];
+}
+
+export interface NotificationItem {
+  id: number;
+  type: string;
+  title: string;
+  body: string | null;
+  link: string | null;
+  read_at: string | null;
+  created_at: string;
 }
 
 export interface AssessmentQuestion {
@@ -75,6 +165,19 @@ export const api = {
   assessmentQuestions: (token: string) => get<AssessmentQuestion[]>(`/portal/${token}/assessment`),
   submitAssessment: (token: string, payload: { answers: { question_id: number; answer_index: number }[] }) =>
     post<{ overall_score: number; message: string }>(`/portal/${token}/assessment`, payload),
+  profile: (token: string) => get<TalentProfile>(`/portal/${token}/profile`),
+  updateProfile: (token: string, payload: Partial<TalentProfile["candidate"]>) =>
+    post<TalentProfile>(`/portal/${token}/profile`, payload, "PATCH"),
+  addExperience: (token: string, payload: Partial<Experience> & { type: string; title: string }) =>
+    post<{ message: string; profile: TalentProfile }>(`/portal/${token}/experiences`, payload),
+  deleteExperience: (token: string, id: number) => post<{ ok: boolean }>(`/portal/${token}/experiences/${id}`, {}, "DELETE"),
+  myApplications: (token: string) => get<MyApplication[]>(`/portal/${token}/applications`),
+  opportunities: (token: string) => get<Opportunities>(`/portal/${token}/opportunities`),
+  respond: (token: string, id: number, decision: "accept" | "decline") =>
+    post<{ status: string; message: string }>(`/portal/${token}/opportunities/${id}/respond`, { decision }),
+  notifications: (token: string) => get<{ unread: number; items: NotificationItem[] }>(`/portal/${token}/notifications`),
+  markRead: (token: string) => post<{ ok: boolean }>(`/portal/${token}/notifications/read`, {}),
+  stats: () => get<{ open_vacancies: number; candidates: number; skills_proven: number; rediscovered: number }>("/stats"),
   help: (q: string) => get<{ answer: string }>(`/help?q=${encodeURIComponent(q)}`),
 };
 

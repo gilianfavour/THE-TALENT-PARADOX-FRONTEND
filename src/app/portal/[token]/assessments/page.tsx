@@ -1,0 +1,61 @@
+import Link from "next/link";
+import { api } from "@/lib/api";
+import { Card, LevelBadge, scoreTone } from "@/components/ui";
+
+export const dynamic = "force-dynamic";
+
+export default async function AssessmentsPage({ params }: { params: Promise<{ token: string }> }) {
+  const { token } = await params;
+  const p = await api.profile(token);
+  const assessed = p.skills.filter((s) => s.score !== null);
+  const toProve = p.skills.filter((s) => s.score === null).slice(0, 10);
+
+  return (
+    <div className="space-y-6">
+      <Card className="flex flex-wrap items-center justify-between gap-6">
+        <div className="max-w-2xl">
+          <h1 className="font-display text-3xl font-bold tracking-tight">Assessments</h1>
+          <p className="mt-2 text-slate-600">
+            Short, practical scenarios built around real job tasks. Your results become proven evidence that counts in every match.
+            Scores show what you demonstrated, they do not predict future performance.
+          </p>
+        </div>
+        <Link href={`/assess/${token}`} className="rounded-xl bg-brand-600 px-6 py-3.5 text-sm font-bold text-white hover:bg-brand-700">
+          {assessed.length ? "Take another skills check" : "Start your skills check"}
+        </Link>
+      </Card>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <h2 className="font-display text-xl font-bold">Completed results ({assessed.length})</h2>
+          <div className="mt-5 space-y-4">
+            {assessed.length === 0 && <p className="text-sm text-slate-500">No results yet.</p>}
+            {assessed.map((s) => (
+              <div key={s.id}>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-semibold">{s.name}</span>
+                  <span className={`font-display font-bold ${scoreTone(s.score!)}`}>{s.score}</span>
+                </div>
+                <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-full rounded-full bg-brand-500" style={{ width: `${Math.min(100, s.score!)}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+        <Card>
+          <h2 className="font-display text-xl font-bold">Skills you could prove next</h2>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {toProve.length === 0 && <p className="text-sm text-slate-500">Add experiences to discover more skills.</p>}
+            {toProve.map((s) => (
+              <span key={s.id} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-paper px-3 py-2 text-sm font-semibold">
+                {s.name}
+                <LevelBadge level={s.level} label={s.level_label} />
+              </span>
+            ))}
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}

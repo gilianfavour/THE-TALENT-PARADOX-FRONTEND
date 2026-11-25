@@ -11,6 +11,21 @@ export const metadata: Metadata = {
   description: "Because the best candidate is not always the one with the best CV.",
 };
 
+const NAV = [
+  ["/vacancies", "Vacancies"],
+  ["/platform", "Platform"],
+  ["/how-it-works", "How it works"],
+  ["/recruiters", "Recruiters"],
+  ["/fairness", "Fairness"],
+  ["/help", "Help"],
+] as const;
+
+const FOOTER: { title: string; links: [string, string][] }[] = [
+  { title: "Candidates", links: [["/vacancies", "Open vacancies"], ["/portal", "My portal"], ["/graduates", "Graduate pathway"], ["/how-it-works", "How it works"], ["/faq", "FAQ"], ["/help", "Help assistant"]] },
+  { title: "Platform", links: [["/platform", "Overview"], ["/platform/discover", "Discover"], ["/platform/verify", "Verify"], ["/platform/connect", "Connect"], ["/fairness", "Fairness"]] },
+  { title: "Donswift", links: [["/about", "About"], ["/recruiters", "For recruiters"], ["/employers", "For employers"], ["/contact", "Contact"], ["/privacy", "Privacy"], ["/terms", "Terms"]] },
+];
+
 function Logo() {
   return (
     <span className="flex items-center gap-2.5">
@@ -35,26 +50,33 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Logo />
             </Link>
             <nav className="flex items-center gap-1 text-sm font-semibold text-slate-600">
-              {[
-                ["/vacancies", "Vacancies"],
-                ["/how-it-works", "How it works"],
-                ["/recruiters", "For recruiters"],
-                ["/fairness", "Fairness"],
-                ["/help", "Help"],
-              ].map(([href, label]) => (
+              {NAV.map(([href, label]) => (
                 <Link key={href} href={href} className="hidden rounded-lg px-3 py-2 transition hover:bg-slate-100 hover:text-ink lg:inline">
                   {label}
                 </Link>
               ))}
-              <Link href="/vacancies" className="rounded-lg px-3 py-2 transition hover:bg-slate-100 hover:text-ink lg:hidden">
-                Vacancies
-              </Link>
-              <Link href="/portal" className="ml-1 rounded-lg border border-slate-300 bg-white px-4 py-2 text-ink transition hover:border-slate-400">
+              <Link href="/portal" className="ml-1 hidden rounded-lg border border-slate-300 bg-white px-4 py-2 text-ink transition hover:border-slate-400 sm:inline">
                 My portal
               </Link>
               <Link href="/vacancies" className="ml-1 hidden rounded-lg bg-brand-600 px-4 py-2 text-white shadow-sm transition hover:bg-brand-700 sm:inline">
                 Find a role
               </Link>
+              <details className="group relative lg:hidden">
+                <summary className="ml-1 flex cursor-pointer list-none items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-ink">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden>
+                    <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
+                  </svg>
+                  Menu
+                </summary>
+                <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                  {[...NAV, ["/graduates", "Graduates"], ["/employers", "Employers"], ["/faq", "FAQ"], ["/portal", "My portal"]].map(([href, label]) => (
+                    <Link key={href} href={href} className="block rounded-xl px-4 py-2.5 hover:bg-slate-100 hover:text-ink">
+                      {label}
+                    </Link>
+                  ))}
+                  <Link href="/vacancies" className="mt-1 block rounded-xl bg-brand-600 px-4 py-2.5 text-center text-white">Find a role</Link>
+                </div>
+              </details>
             </nav>
           </div>
         </header>
@@ -62,33 +84,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="mx-auto w-full max-w-6xl flex-1 px-5 py-10">{children}</main>
 
         <footer className="border-t border-slate-200 bg-white">
-          <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
             <div>
               <Logo />
               <p className="mt-3 max-w-xs text-sm leading-relaxed text-slate-500">
-                Because the best candidate is not always the one with the best CV.
+                Discover. Verify. Connect. Because the best candidate is not always the one with the best CV.
               </p>
+              <p className="mt-4 text-xs leading-relaxed text-slate-400">Donswift Company Ltd, Kampala, Uganda. Built with the Data Protection and Privacy Act, 2019 in mind.</p>
             </div>
-            <div className="text-sm">
-              <p className="font-bold text-ink">Candidates</p>
-              <ul className="mt-3 space-y-2 text-slate-500">
-                <li><Link href="/vacancies" className="hover:text-brand-700">Open vacancies</Link></li>
-                <li><Link href="/portal" className="hover:text-brand-700">My portal</Link></li>
-                <li><Link href="/how-it-works" className="hover:text-brand-700">How it works</Link></li>
-                <li><Link href="/help" className="hover:text-brand-700">Help centre</Link></li>
-              </ul>
-            </div>
-            <div className="text-sm">
-              <p className="font-bold text-ink">Donswift</p>
-              <ul className="mt-3 space-y-2 text-slate-500">
-                <li><Link href="/recruiters" className="hover:text-brand-700">For recruiters</Link></li>
-                <li><Link href="/fairness" className="hover:text-brand-700">Fairness and privacy</Link></li>
-              </ul>
-            </div>
-            <div className="text-sm text-slate-500">
-              <p className="font-bold text-ink">Donswift Company Ltd</p>
-              <p className="mt-3 leading-relaxed">Kampala, Uganda. Built with the Data Protection and Privacy Act, 2019 in mind.</p>
-            </div>
+            {FOOTER.map((col) => (
+              <div key={col.title} className="text-sm">
+                <p className="font-bold text-ink">{col.title}</p>
+                <ul className="mt-3 space-y-2 text-slate-500">
+                  {col.links.map(([href, label]) => (
+                    <li key={href}><Link href={href} className="transition hover:text-brand-700">{label}</Link></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div className="border-t border-slate-100">
+            <p className="mx-auto max-w-6xl px-5 py-5 text-xs text-slate-400">&copy; {new Date().getFullYear()} Donswift Company Ltd. AI discovers and supports. Humans make the decisions.</p>
           </div>
         </footer>
       </body>
