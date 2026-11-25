@@ -21,6 +21,29 @@ export default function ApplyForm({ job }: { job: { id: number; title: string; c
   const [form, setForm] = useState({ name: "", email: "", phone: "", location: "", cv_text: "" });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [cvFile, setCvFile] = useState<string | null>(null);
+  const [reading, setReading] = useState(false);
+
+  async function uploadCv(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    setReading(true);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await fetch("/api/cv", { method: "POST", body });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message ?? "We could not read that file.");
+      setForm((f) => ({ ...f, cv_text: data.text }));
+      setCvFile(file.name);
+      toast("CV read. Check the text below and add anything it leaves out.");
+    } catch (err) {
+      toast(err instanceof Error ? err.message : "We could not read that file.", "error");
+    } finally {
+      setReading(false);
+    }
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -73,10 +96,29 @@ export default function ApplyForm({ job }: { job: { id: number; title: string; c
             </label>
           </div>
 
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-dashed border-slate-300 bg-paper px-4 py-4">
+            <div>
+              <p className="text-sm font-semibold">Upload your CV <span className="font-normal text-slate-400">(PDF, Word or text)</span></p>
+              <p className="text-xs text-slate-500">{cvFile ? `Read from ${cvFile}. Check and correct the text below.` : "We read it into the box below so you can check it before applying."}</p>
+            </div>
+            <label className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition ${reading ? "bg-slate-200 text-slate-500" : "bg-ink text-white hover:bg-zinc-800"}`}>
+              {reading ? (
+                <>
+                  <Spinner /> Reading CV...
+                </>
+              ) : cvFile ? (
+                "Replace file"
+              ) : (
+                "Choose file"
+              )}
+              <input type="file" accept=".pdf,.docx,.txt,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={uploadCv} disabled={reading} className="sr-only" />
+            </label>
+          </div>
+
           <label className="block text-sm font-semibold">
             Your experience and CV
             <span className="mt-0.5 block text-xs font-normal text-slate-500">
-              Paste your CV, or simply describe what you have done. Formatting does not count against you.
+              Upload above, paste your CV, or simply describe what you have done. Formatting does not count against you.
             </span>
             <textarea
               required

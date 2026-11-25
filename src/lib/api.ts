@@ -138,6 +138,42 @@ export interface Opportunities {
   suggested: { job_id: number; title: string; client: string; deadline: string | null; score: number; signals: string[]; top_reasons: string[] }[];
 }
 
+export interface TaskCriterionResult {
+  key: string;
+  label: string;
+  weight: number;
+  points: number;
+  status: "shown" | "partly" | "not_shown";
+  feedback: string;
+}
+
+export interface TaskResult {
+  status: "needs_review" | "validated";
+  preliminary_score: number;
+  final_score: number | null;
+  criteria: TaskCriterionResult[];
+  review_reason: string | null;
+  reviewer: string | null;
+  review_note: string | null;
+  submitted_at: string | null;
+  response: string;
+}
+
+export interface PracticalTask {
+  slug: string;
+  title: string;
+  role: string;
+  minutes: number;
+  skills: string[];
+  brief: string;
+  scenario: string;
+  criteria: { label: string; weight: number }[];
+  job_id: number | null;
+  job: string | null;
+  why?: "applied" | "suggested";
+  result: TaskResult | null;
+}
+
 export interface NotificationItem {
   id: number;
   type: string;
@@ -177,6 +213,10 @@ export const api = {
     post<{ status: string; message: string }>(`/portal/${token}/opportunities/${id}/respond`, { decision }),
   notifications: (token: string) => get<{ unread: number; items: NotificationItem[] }>(`/portal/${token}/notifications`),
   markRead: (token: string) => post<{ ok: boolean }>(`/portal/${token}/notifications/read`, {}),
+  tasks: (token: string) => get<PracticalTask[]>(`/portal/${token}/tasks`),
+  task: (token: string, slug: string, job?: string) => get<PracticalTask>(`/portal/${token}/tasks/${slug}${job ? `?job=${job}` : ""}`),
+  submitTask: (token: string, slug: string, payload: { response: string; link?: string; job_id?: number | null }) =>
+    post<{ message: string; result: TaskResult }>(`/portal/${token}/tasks/${slug}`, payload),
   stats: () => get<{ open_vacancies: number; candidates: number; skills_proven: number; rediscovered: number }>("/stats"),
   help: (q: string) => get<{ answer: string }>(`/help?q=${encodeURIComponent(q)}`),
 };

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AssessmentsPage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
-  const p = await api.profile(token);
+  const [p, tasks] = await Promise.all([api.profile(token), api.tasks(token).catch(() => [])]);
   const assessed = p.skills.filter((s) => s.score !== null);
   const toProve = p.skills.filter((s) => s.score === null).slice(0, 10);
 
@@ -25,9 +25,53 @@ export default async function AssessmentsPage({ params }: { params: Promise<{ to
         </Link>
       </Card>
 
+      <Card>
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand-600">Practical tasks</p>
+            <h2 className="mt-1 font-display text-2xl font-bold">Show the real work of the job</h2>
+            <p className="mt-1 max-w-2xl text-sm text-slate-500">
+              Each task is built around the vacancy and scored against a clear rubric. You get instant preliminary feedback, then a
+              recruiter reviews your work before it counts as validated.
+            </p>
+          </div>
+        </div>
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          {tasks.length === 0 && <p className="text-sm text-slate-500">Apply for a vacancy to unlock its practical task.</p>}
+          {tasks.map((t) => {
+            const r = t.result;
+            const badge = !r
+              ? { text: "Not started", tone: "bg-slate-100 text-slate-600" }
+              : r.status === "validated"
+                ? { text: `Validated ${r.final_score}`, tone: "bg-brand-600 text-white" }
+                : { text: `Preliminary ${Math.round(r.preliminary_score)} · in review`, tone: "bg-amber-50 text-amber-800 ring-1 ring-amber-200" };
+            return (
+              <Link
+                key={t.slug}
+                href={`/portal/${token}/tasks/${t.slug}${t.job_id ? `?job=${t.job_id}` : ""}`}
+                className="group flex flex-col rounded-2xl border border-slate-200 p-5 transition hover:-translate-y-0.5 hover:border-brand-500 hover:shadow-md"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <span className="text-xs font-bold text-slate-400">{t.why === "applied" ? "For your application" : "Suggested for you"} · {t.minutes} min</span>
+                  <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-bold ${badge.tone}`}>{badge.text}</span>
+                </div>
+                <p className="mt-2 font-display text-lg font-bold group-hover:text-brand-700">{t.title}</p>
+                <p className="text-sm text-slate-500">{t.job}</p>
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {t.skills.map((s) => (
+                    <span key={s} className="rounded-md bg-paper px-2 py-0.5 text-xs font-semibold text-slate-600">{s}</span>
+                  ))}
+                </div>
+                <span className="mt-4 text-sm font-bold text-brand-700">{r ? "View result" : "Start task"} &rarr;</span>
+              </Link>
+            );
+          })}
+        </div>
+      </Card>
+
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
-          <h2 className="font-display text-xl font-bold">Completed results ({assessed.length})</h2>
+          <h2 className="font-display text-xl font-bold">Skill scores ({assessed.length})</h2>
           <div className="mt-5 space-y-4">
             {assessed.length === 0 && <p className="text-sm text-slate-500">No results yet.</p>}
             {assessed.map((s) => (
