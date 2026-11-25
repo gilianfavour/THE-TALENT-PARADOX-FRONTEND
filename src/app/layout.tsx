@@ -74,6 +74,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   Sign in
                 </Link>
               )}
+              <ReadAloud />
               <Link href="/vacancies" className="tb-sheen ml-1 hidden rounded-lg bg-brand-600 px-4 py-2 text-white shadow-sm transition hover:bg-brand-700 sm:inline-block">
                 Find a role
               </Link>
@@ -125,7 +126,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </div>
         </footer>
         <Toaster />
-        <ReadAloud />
       </body>
     </html>
   );
