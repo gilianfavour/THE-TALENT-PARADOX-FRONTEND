@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BridgeIllustration from "@/components/BridgeIllustration";
 
 const STEPS = [
   {
@@ -39,12 +40,15 @@ const LADDER = [
 export default function HowItWorks() {
   return (
     <div className="space-y-16">
-      <header className="max-w-3xl">
+      <header className="anim-fade-up grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
+        <div>
         <h1 className="font-display text-5xl font-bold leading-tight tracking-tight">From hidden talent to hired, in five steps</h1>
         <p className="mt-4 text-lg leading-relaxed text-slate-600">
           TalentBridge asks a different question. Not &ldquo;does this CV match the vacancy?&rdquo; but &ldquo;what can this
           person do, what proves it, and which roles need it?&rdquo;
         </p>
+        </div>
+        <BridgeIllustration className="h-auto w-full rounded-3xl border border-slate-200" />
       </header>
 
       <ol className="relative space-y-6 border-l-2 border-brand-100 pl-8">

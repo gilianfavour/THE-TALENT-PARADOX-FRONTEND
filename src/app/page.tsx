@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { api, fmtMoney } from "@/lib/api";
+import BridgeIllustration from "@/components/BridgeIllustration";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,9 @@ function Dots({ level }: { level: number }) {
   return (
     <span className="flex gap-1" aria-label={`Evidence level ${level} of 5`}>
       {LADDER.map((l, i) => (
-        <span key={l.label} className={`h-1.5 w-5 rounded-full ${i < level ? l.tone : "bg-slate-200"}`} />
+        <span key={l.label} className="h-1.5 w-5 overflow-hidden rounded-full bg-slate-200">
+          {i < level && <span className={`anim-grow block h-full ${l.tone}`} style={{ animationDelay: `${0.8 + i * 0.12}s` }} />}
+        </span>
       ))}
     </span>
   );
@@ -41,18 +44,18 @@ export default async function Home() {
       {/* Hero */}
       <section className="grid items-center gap-12 pt-4 lg:grid-cols-[1.1fr_1fr]">
         <div>
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+          <span style={{ animationDelay: "0.05s" }} className="anim-fade-up inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
             <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
             {jobs.length} open vacancies at Donswift
           </span>
-          <h1 className="mt-6 font-display text-5xl font-bold leading-[1.02] tracking-tight text-ink sm:text-6xl">
+          <h1 style={{ animationDelay: "0.15s" }} className="anim-fade-up mt-6 font-display text-5xl font-bold leading-[1.02] tracking-tight text-ink sm:text-6xl">
             The best candidate is not always the best CV.
           </h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
+          <p style={{ animationDelay: "0.3s" }} className="anim-fade-up mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
             TalentBridge reads your projects, family business, volunteering and self-taught skills, lets you prove them in a
             short practical task, and matches you to every role you fit. Not just the one you applied for.
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+          <div style={{ animationDelay: "0.45s" }} className="anim-fade-up mt-8 flex flex-wrap items-center gap-3">
             <a href="#jobs" className="rounded-xl bg-brand-600 px-6 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-brand-700">
               Browse open roles
             </a>
@@ -60,7 +63,7 @@ export default async function Home() {
               See how it works
             </a>
           </div>
-          <dl className="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-slate-200 pt-6">
+          <dl style={{ animationDelay: "0.6s" }} className="anim-fade-up mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-slate-200 pt-6">
             <div>
               <dt className="text-xs text-slate-500">Applications a week</dt>
               <dd className="mt-1 font-display text-2xl font-bold">500+</dd>
@@ -77,7 +80,7 @@ export default async function Home() {
         </div>
 
         {/* Talent profile visual */}
-        <div className="relative">
+        <div className="anim-fade-up relative" style={{ animationDelay: "0.35s" }}>
           <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-brand-100 via-white to-sun-50" />
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_20px_60px_-25px_rgba(10,10,10,0.35)]">
             <div className="flex items-center gap-4">
@@ -117,7 +120,10 @@ export default async function Home() {
             Three steps between you and a fair shot. No keyword filter decides your future.
           </p>
         </div>
-        <ol className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-slate-200 bg-slate-200 md:grid-cols-3">
+        <div className="mt-10 overflow-hidden rounded-3xl border border-slate-200 bg-white p-3">
+          <BridgeIllustration className="h-auto w-full" />
+        </div>
+        <ol className="mt-6 grid gap-px overflow-hidden rounded-3xl border border-slate-200 bg-slate-200 md:grid-cols-3">
           {[
             {
               t: "Discover",

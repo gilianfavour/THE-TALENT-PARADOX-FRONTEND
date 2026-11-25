@@ -43,3 +43,18 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Motion: one load sequence for hero content, plus the bridge illustration */
+@keyframes tb-fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes tb-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes tb-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes tb-draw { from { stroke-dashoffset: 900; } to { stroke-dashoffset: 0; } }
+@keyframes tb-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes tb-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.35); opacity: 0.6; } }
+.anim-fade-up { opacity: 0; animation: tb-fade-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+.anim-fade { opacity: 0; animation: tb-fade 0.6s ease-out forwards; }
+.anim-float { animation: tb-float 4s ease-in-out infinite; }
+.anim-draw { stroke-dasharray: 900; animation: tb-draw 1.6s cubic-bezier(0.6, 0, 0.2, 1) forwards; }
+.anim-grow { transform-origin: left; transform: scaleX(0); animation: tb-grow 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+.anim-pulse { animation: tb-pulse 2.4s ease-in-out infinite; transform-box: fill-box; }
+@media (prefers-reduced-motion: reduce) { .anim-fade-up, .anim-fade, .anim-grow { opacity: 1; transform: none; } .anim-draw { stroke-dasharray: none; } }
