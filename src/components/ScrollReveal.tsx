@@ -54,9 +54,28 @@ export default function ScrollReveal() {
       { rootMargin: "0px 0px -8% 0px", threshold: 0.06 }
     );
 
+    let pending = 0;
+    function schedule() {
+      cancelAnimationFrame(pending);
+      pending = requestAnimationFrame(scan);
+    }
+
+    // only touch elements React has already hydrated, otherwise React reports an attribute mismatch
+    const hydrated = (el: Element) => Object.keys(el).some((k) => k.startsWith("__reactFiber$"));
+    let retries = 0;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+
     const scan = () => {
       const fold = window.innerHeight * 0.92;
-      const skip = (el: Element) => seen.has(el) || !!el.closest("[data-no-reveal], .anim-fade-up, [data-reveal]");
+      let waiting = false;
+      const skip = (el: Element) => {
+        if (seen.has(el) || el.closest("[data-no-reveal], .anim-fade-up, [data-reveal]")) return true;
+        if (!hydrated(el)) {
+          waiting = true;
+          return true;
+        }
+        return false;
+      };
 
       const cards = Array.from(main.querySelectorAll<HTMLElement>(".grid > *")).filter(
         (el) => !skip(el) && el.getBoundingClientRect().height > 0
@@ -76,13 +95,14 @@ export default function ScrollReveal() {
         }
         io.observe(el);
       });
+
+      if (waiting && retries < 40) {
+        retries++;
+        clearTimeout(retryTimer);
+        retryTimer = setTimeout(schedule, 150);
+      }
     };
 
-    let pending = 0;
-    const schedule = () => {
-      cancelAnimationFrame(pending);
-      pending = requestAnimationFrame(scan);
-    };
     schedule();
 
     // streamed or client-rendered content (loading.tsx, Suspense) arrives after mount
@@ -93,6 +113,7 @@ export default function ScrollReveal() {
 
     return () => {
       cancelAnimationFrame(pending);
+      clearTimeout(retryTimer);
       mo.disconnect();
       io.disconnect();
       timers.forEach(clearTimeout);
